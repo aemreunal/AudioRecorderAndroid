@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context=".RootActivity"
+                android:id="@+id/RootLayout">
+
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/jobNameEditText"
+            android:inputType="text"
+            android:hint="@string/jobNameTextFieldHint"
+            android:layout_toEndOf="@+id/recordButton"
+            android:layout_alignTop="@+id/durationEditText"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/durationEditText"
+            android:hint="@string/durationTextFieldHint"
+            android:layout_toStartOf="@+id/recordButton"
+            android:layout_above="@+id/recordButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="64dp"/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/startRecording"
+            android:id="@+id/recordButton"
+            android:onClick="recordButtonTapped"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
