@@ -5,9 +5,13 @@
     <string name="action_settings">Settings</string>
     <string name="startRecording">Record</string>
     <string name="stopRecording">Stop</string>
-    <string name="durationTextFieldHint">Duration</string>
-    <string name="jobNameTextFieldHint">Job name</string>
-    <string name="jobNameTextFieldTitle">Job name</string>
-    <string name="durationTextFieldTitle">Duration</string>
+    <string name="jobNameTextFieldHint">Enter job name</string>
+    <string name="durationTextFieldHint">Enter duration</string>
+    <string name="durationLabel">Duration</string>
+    <string name="jobNameLabel">Job Name</string>
+    <string name="defaultDurationText">5</string>
+    <string name="title_activity_recorder">RecorderActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

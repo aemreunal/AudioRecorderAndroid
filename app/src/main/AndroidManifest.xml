@@ -20,6 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name=".RecorderActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:label="@string/title_activity_recorder"
+                android:parentActivityName=".RootActivity"
+                android:theme="@style/FullscreenTheme">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.aemreunal.audiorecorder.RootActivity"/>
+        </activity>
     </application>
 
 </manifest>
