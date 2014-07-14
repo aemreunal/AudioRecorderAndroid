@@ -1,6 +1,7 @@
 package com.aemreunal.audiorecorder;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import com.aemreunal.audiorecorder.model.RecorderController;
 
 
 public class RootActivity extends Activity implements RecorderController {
+    public static final int REQUEST_CODE_RECORDER_VIEW = 12345601;
     private Button recordButton;
     private EditText durationTextField;
     private EditText jobNameTextField;
@@ -30,6 +32,7 @@ public class RootActivity extends Activity implements RecorderController {
     }
 
     public void recordButtonTapped(View view) {
+        /*
         if (recorder == null) {
             createRecorder();
             if(durationInMS == -1) {
@@ -46,6 +49,26 @@ public class RootActivity extends Activity implements RecorderController {
         } else {
             recorder.stopRecording();
             switchToReadyToRecordState();
+        }
+        */
+        Intent intent = new Intent(this, RecorderActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_RECORDER_VIEW);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("Result.");
+        switch (requestCode) {
+            case REQUEST_CODE_RECORDER_VIEW:
+                if (resultCode == RESULT_OK) {
+                    // This means our Activity returned successfully. For now, Toast this text.
+                    String displayedMessage = data.getStringExtra("PATH");
+                    Toast.makeText(this, "Result OK! Displayed message: " + displayedMessage, Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
         }
     }
 
