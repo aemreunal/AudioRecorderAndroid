@@ -32,6 +32,10 @@ public class RootActivity extends Activity implements RecorderController {
     public void recordButtonTapped(View view) {
         if (recorder == null) {
             createRecorder();
+            if(durationInMS == -1) {
+                showDurationError();
+                return;
+            }
             durationTextField.setEnabled(false);
             jobNameTextField.setEnabled(false);
         }
@@ -47,12 +51,18 @@ public class RootActivity extends Activity implements RecorderController {
 
     private void createRecorder() {
         // Check duration
+        durationInMS = -1;
         String durationInMSAsString = durationTextField.getText().toString();
-        if (durationInMSAsString == null || durationInMSAsString == "" || durationInMSAsString.length() == 0) {
-            showDurationError();
-            durationInMSAsString = getString(R.string.defaultDurationText);
+        if (durationInMSAsString != null && durationInMSAsString != "" && durationInMSAsString.length() != 0) {
+            int duration = Integer.parseInt(durationInMSAsString);
+            if(duration >= 1 && duration <= 180) {
+                durationInMS = duration * 1000; // * 1000 to convert from seconds to ms
+            }
         }
-        durationInMS = Integer.parseInt(durationInMSAsString) * 1000; // * 1000 to convert from seconds to ms
+
+        if(durationInMS == -1) {
+            return;
+        }
 
         // Check job name
         jobName = jobNameTextField.getText().toString();
@@ -64,7 +74,7 @@ public class RootActivity extends Activity implements RecorderController {
     }
 
     private void showDurationError() {
-        Toast.makeText(this, "Please enter a valid duration value between 1 and 180. Defaulting to 5 seconds.", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Please enter a valid duration value between 1 and 180.", Toast.LENGTH_LONG).show();
     }
 
     public void switchToRecordingState() {
