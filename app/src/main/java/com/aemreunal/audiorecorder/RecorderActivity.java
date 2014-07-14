@@ -3,6 +3,8 @@ package com.aemreunal.audiorecorder;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import com.aemreunal.audiorecorder.model.RecorderController;
@@ -16,9 +18,11 @@ public class RecorderActivity extends Activity implements RecorderController {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.recorder, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void doneButtonTapped(View view) {

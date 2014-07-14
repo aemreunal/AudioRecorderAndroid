@@ -64,6 +64,8 @@ public class RootActivity extends Activity implements RecorderController {
                     // This means our Activity returned successfully. For now, Toast this text.
                     String displayedMessage = data.getStringExtra("PATH");
                     Toast.makeText(this, "Result OK! Displayed message: " + displayedMessage, Toast.LENGTH_SHORT).show();
+                } else if (resultCode == RESULT_CANCELED) {
+                    //Write your code if there's no result
                 }
                 break;
             default:
