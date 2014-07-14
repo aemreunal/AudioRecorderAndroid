@@ -32,6 +32,8 @@ public class RootActivity extends Activity implements RecorderController {
     public void recordButtonTapped(View view) {
         if (recorder == null) {
             createRecorder();
+            durationTextField.setEnabled(false);
+            jobNameTextField.setEnabled(false);
         }
 
         if (!recorder.isRecording()) {
