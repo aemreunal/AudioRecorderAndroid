@@ -4,7 +4,7 @@
     <string name="app_name">AudioRecorder</string>
     <string name="action_settings">Settings</string>
     <string name="startRecording">Record</string>
-    <string name="stopRecording">Stop</string>
+    <string name="stopRecording">Cancel</string>
     <string name="jobNameTextFieldHint">Enter job name</string>
     <string name="durationTextFieldHint">Enter duration</string>
     <string name="durationLabel">Duration</string>
@@ -15,5 +15,10 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_submit">Submit</string>
+    <string name="timeLeftCounterPlaceholder">999</string>
+    <string name="timeLeftLabel">Time left:</string>
+    <string name="startListening">Listen</string>
+    <string name="stopListening">Stop</string>
 
 </resources>

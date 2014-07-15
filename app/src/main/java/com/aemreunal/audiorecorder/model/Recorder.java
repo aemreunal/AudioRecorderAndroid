@@ -6,7 +6,9 @@ package com.aemreunal.audiorecorder.model;
  */
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,11 +29,13 @@ public class Recorder {
     private MediaRecorder mediaRecorder;
     private String outputFilePath;
     private File outputFile;
+    private MediaPlayer mediaPlayer;
 
     private Timer timer;
     private long elapsedTime;
 
     private boolean isRecording = false;
+    private boolean isPlaying = false;
 
     private Activity parentActivity; // Must implement RecorderController interface
 
@@ -42,7 +46,11 @@ public class Recorder {
         this.parentActivity = parentActivity;
         this.name = name;
         this.durationInMS = durationInMS;
+        if (durationInMS < 1) {
+            throw new IllegalArgumentException("Invalid recording duration argument provided!");
+        }
         this.mediaRecorder = new MediaRecorder();
+        this.mediaPlayer = new MediaPlayer();
     }
 
     public void startRecording() {
@@ -54,26 +62,65 @@ public class Recorder {
             createTimer();
         } catch (IllegalStateException e) {
             System.err.println("Unable to prepare mediaRecorder! IllegalState Exception");
+            System.err.println(e.getMessage());
         } catch (IOException e) {
             System.err.println("Unable to prepare mediaRecorder! IO Exception");
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 
     public void stopRecording() {
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
         if (isRecording) {
             mediaRecorder.stop();
             mediaRecorder.reset();
             outputFile.delete();
             isRecording = false;
         }
-        parentActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ((RecorderController) parentActivity).switchToReadyToRecordState();
-            }
-        });
+    }
+
+    public void startPlaying() {
+        initMediaPlayer();
+        try {
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            isPlaying = true;
+        } catch (IllegalStateException e) {
+            showError(e);
+        } catch (IOException e) {
+            showError(e);
+        }
+    }
+
+    public void stopPlaying() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+        mediaPlayer.reset();
+    }
+
+    public void stop() {
+        stopPlaying();
+        stopRecording();
+        if (outputFile != null && outputFile.exists()) {
+            outputFile.delete();
+        }
+    }
+
+    private void onRecordingFinished() {
+        isRecording = false;
+        stopRecording();
+        destroyMediaRecorder();
+        initMediaPlayer();
+        ((RecorderController) parentActivity).onRecordingFinished(outputFilePath);
+    }
+
+    private void onPlayingFinished() {
+        isPlaying = false;
+        stopPlaying();
+        ((RecorderController) parentActivity).onPlayingFinished();
     }
 
     private void initMediaRecorder() {
@@ -107,18 +154,42 @@ public class Recorder {
         timer.scheduleAtFixedRate(new UpdateTimerDisplayTask(), TIMER_UPDATE_FREQUENCY_MS, TIMER_UPDATE_FREQUENCY_MS);
     }
 
+    private void initMediaPlayer() {
+        mediaPlayer.setOnCompletionListener(new PlayerInfoListener());
+        try {
+            mediaPlayer.setDataSource(outputFilePath);
+        } catch (IOException e) {
+            showError(e);
+        }
+    }
+
+    private void destroyMediaRecorder() {
+        mediaRecorder.stop();
+        mediaRecorder.reset();
+        mediaRecorder.release();
+        mediaRecorder = null;
+    }
+
+    private void showError(Exception e) {
+        System.err.println("Unable to prepare MediaPlayer! An exception occurred.");
+        System.err.println(e.getMessage());
+        e.printStackTrace();
+        Toast.makeText(parentActivity, "Unable to play recording, an exception occurred.", Toast.LENGTH_LONG).show();
+    }
+
     public boolean isRecording() {
         return isRecording;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
     }
 
     private class RecorderInfoListener implements MediaRecorder.OnInfoListener {
         @Override
         public void onInfo(MediaRecorder mr, int what, int extra) {
             if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
-                System.out.println("Max duration reached.");
-                isRecording = false;
-                stopRecording();
-                ((RecorderController) parentActivity).saveRecording(outputFilePath);
+                onRecordingFinished();
             }
         }
     }
@@ -128,11 +199,16 @@ public class Recorder {
         public void run() {
             elapsedTime += TIMER_UPDATE_FREQUENCY_MS;
             ((RecorderController) parentActivity).updateTimerDisplay(durationInMS - elapsedTime);
-
             if (elapsedTime >= durationInMS) {
                 timer.cancel();
-                System.out.println("Stopping timer.");
             }
+        }
+    }
+
+    private class PlayerInfoListener implements MediaPlayer.OnCompletionListener {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            onPlayingFinished();
         }
     }
 }

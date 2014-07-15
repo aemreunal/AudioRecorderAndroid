@@ -8,29 +8,47 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.aemreunal.audiorecorder.model.Recorder;
 import com.aemreunal.audiorecorder.model.RecorderActivityController;
 import com.aemreunal.audiorecorder.model.RecorderController;
 
 public class RecorderActivity extends Activity implements RecorderController {
-    private Activity parentActivity; // Must implement the RecorderActivityController interface
+    private Button recordButton;
+    private MenuItem submitButton;
+    //    private ProgressBar progressBar;
+    private TextView timeLeftCounter;
 
     private Recorder recorder;
-    private long durationInMS;
+    private long recordingDurationInMS;
     private String jobName;
+
+    private String recordingFilePath;
+
+    private boolean recordingComplete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recorder);
+        getActivityElements();
         setActionBarProperties();
         getExtras();
+        recorder = new Recorder(this, jobName, recordingDurationInMS);
+        switchToReadyToRecordState();
+    }
+
+    private void getActivityElements() {
+        recordButton = (Button) findViewById(R.id.recordButton);
+        timeLeftCounter = (TextView) findViewById(R.id.timeLeftCounter);
+//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
 
     private void setActionBarProperties() {
         ActionBar actionBar = getActionBar();
-        if(actionBar == null) {
+        if (actionBar == null) {
             return;
         }
         getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -40,12 +58,8 @@ public class RecorderActivity extends Activity implements RecorderController {
     }
 
     private void getExtras() {
-        parentActivity = getParent();
-        if (!RecorderActivityController.class.isAssignableFrom(parentActivity.getClass())) {
-            throw new IllegalArgumentException("Parent activity hasn't implemented RecorderActivityController interface!");
-        }
         Intent requestIntent = getIntent();
-        durationInMS = requestIntent.getLongExtra(RecorderActivityController.DURATION_LONG_EXTRA_KEY, RecorderActivityController.DURATION_LONG_DEFAULT_VALUE);
+        recordingDurationInMS = requestIntent.getLongExtra(RecorderActivityController.DURATION_LONG_EXTRA_KEY, RecorderActivityController.DURATION_LONG_DEFAULT_VALUE);
         jobName = requestIntent.getStringExtra(RecorderActivityController.JOB_NAME_STRING_EXTRA_KEY);
     }
 
@@ -54,39 +68,96 @@ public class RecorderActivity extends Activity implements RecorderController {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.recorder, menu);
+        getSubmitMenuItem(menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void getSubmitMenuItem(Menu menu) {
+        submitButton = menu.findItem(R.id.submitMenuItem);
+        submitButton.setEnabled(false);
+    }
+
+    public void recordButtonTapped(View view) {
+        if (!recordingComplete) {
+            if (!recorder.isRecording()) {
+                switchToRecordingState();
+            } else {
+                switchToReadyToRecordState();
+            }
+        } else {
+            if (!recorder.isPlaying()) {
+                switchToListeningState();
+            } else {
+                switchToReadyToListenAndSubmitState();
+            }
+        }
     }
 
     @Override
     public void switchToReadyToRecordState() {
+        recorder.stopRecording();
+        recordButton.setText(R.string.startRecording);
+        timeLeftCounter.setText(String.valueOf(((int) recordingDurationInMS) / 1000));
 
+//        progressBar.setMax((int) recordingDurationInMS);
+//        progressBar.setProgress(0);
     }
 
     @Override
     public void switchToRecordingState() {
-
+        recorder.startRecording();
+        recordButton.setText(R.string.stopRecording);
     }
 
     @Override
-    public void updateTimerDisplay(long remainingTime) {
-
+    public void switchToReadyToListenAndSubmitState() {
+        recorder.stopPlaying();
+        submitButton.setEnabled(true);
+        timeLeftCounter.setText("0");
+        recordButton.setText(R.string.startListening);
     }
 
     @Override
-    public void saveRecording(String filePath) {
-
+    public void switchToListeningState() {
+        recorder.startPlaying();
+        recordButton.setText(R.string.stopListening);
     }
 
-    public void doneButtonTapped(View view) {
-        Intent doneIntent = new Intent();
-        doneIntent.putExtra(RecorderActivityController.RECORDING_PATH_STRING_EXTRA_KEY, "<Insert file path here>");
-        setResult(RESULT_OK, doneIntent);
-        finish();
+    @Override
+    public void updateTimerDisplay(final long remainingTime) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int remainingTimeAsCounter = (((int) remainingTime) / 1000) + 1;
+                timeLeftCounter.setText(String.valueOf(remainingTimeAsCounter));
+//                progressBar.setProgress((int) ((recordingDurationInMS - remainingTime) / recordingDurationInMS));
+            }
+        });
+    }
+
+    @Override
+    public void onRecordingFinished(String recordingFilePath) {
+        this.recordingFilePath = recordingFilePath;
+        recordingComplete = true;
+        switchToReadyToListenAndSubmitState();
+    }
+
+    @Override
+    public void onPlayingFinished() {
+        switchToReadyToListenAndSubmitState();
     }
 
     public void cancelButtonTapped(MenuItem item) {
+        recorder.stop();
         Intent returnIntent = new Intent();
         setResult(RESULT_CANCELED, returnIntent);
+        finish();
+    }
+
+    public void submitButtonTapped(MenuItem item) {
+        Intent doneIntent = new Intent();
+        doneIntent.putExtra(RecorderActivityController.RECORDING_PATH_STRING_EXTRA_KEY, recordingFilePath);
+        setResult(RESULT_OK, doneIntent);
         finish();
     }
 }

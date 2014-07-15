@@ -13,8 +13,13 @@ public interface RecorderController {
 
     public void switchToRecordingState();
 
+    public void switchToReadyToListenAndSubmitState();
+
+    public void switchToListeningState();
+
     public void updateTimerDisplay(long remainingTime);
 
-    public void saveRecording(String filePath);
+    public void onRecordingFinished(String filePath);
 
+    public void onPlayingFinished();
 }

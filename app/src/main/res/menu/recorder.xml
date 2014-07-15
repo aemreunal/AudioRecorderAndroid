@@ -2,11 +2,18 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.aemreunal.audiorecorder.RecorderActivity">
 
-    <!-- Search, should appear as action button -->
     <item
-            android:id="@+id/action_search"
+            android:id="@+id/submitMenuItem"
+            android:title="@string/action_submit"
+            android:showAsAction="always"
+            android:onClick="submitButtonTapped"
+            />
+
+    <item
+            android:id="@+id/cancelMenuItem"
             android:title="@string/action_cancel"
             android:showAsAction="always"
             android:onClick="cancelButtonTapped"/>
+
 
 </menu>
