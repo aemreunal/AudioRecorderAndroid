@@ -1,4 +1,4 @@
-package com.todddavies.components.progressbar;
+package com.aemreunal.audiorecorder.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;

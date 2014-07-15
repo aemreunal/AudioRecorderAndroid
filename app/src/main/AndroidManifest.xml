@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-                android:name=".RecorderActivity"
+                android:name=".view.RecorderActivity"
                 android:label="@string/title_activity_recorder"
                 android:parentActivityName=".RootActivity"
                 android:theme="@android:style/Theme.Holo">

@@ -1,4 +1,4 @@
-package com.aemreunal.audiorecorder;
+package com.aemreunal.audiorecorder.view;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.aemreunal.audiorecorder.R;
 import com.aemreunal.audiorecorder.model.Recorder;
 import com.aemreunal.audiorecorder.model.RecorderActivityController;
 import com.aemreunal.audiorecorder.model.RecorderController;
-import com.todddavies.components.progressbar.ProgressWheel;
 
 public class RecorderActivity extends Activity implements RecorderController {
     private Button recordButton;

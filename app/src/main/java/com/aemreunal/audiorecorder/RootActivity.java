@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.aemreunal.audiorecorder.model.RecorderActivityController;
+import com.aemreunal.audiorecorder.view.RecorderActivity;
 
 
 public class RootActivity extends Activity implements RecorderActivityController {
