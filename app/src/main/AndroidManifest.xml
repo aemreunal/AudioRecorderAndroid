@@ -25,7 +25,7 @@
                 android:name=".RecorderActivity"
                 android:label="@string/title_activity_recorder"
                 android:parentActivityName=".RootActivity"
-                android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+                android:theme="@android:style/Theme.Holo">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.aemreunal.audiorecorder.RootActivity"/>

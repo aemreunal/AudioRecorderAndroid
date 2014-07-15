@@ -9,11 +9,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.aemreunal.audiorecorder.model.Recorder;
-import com.aemreunal.audiorecorder.model.RecorderController;
+import com.aemreunal.audiorecorder.model.RecorderActivityController;
 
 
-public class RootActivity extends Activity implements RecorderController {
-    public static final int REQUEST_CODE_RECORDER_VIEW = 12345601;
+public class RootActivity extends Activity implements RecorderActivityController {
     private Button recordButton;
     private EditText durationTextField;
     private EditText jobNameTextField;
@@ -52,7 +51,9 @@ public class RootActivity extends Activity implements RecorderController {
         }
         */
         Intent intent = new Intent(this, RecorderActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_RECORDER_VIEW);
+        intent.putExtra(RecorderActivityController.DURATION_LONG_EXTRA_KEY, durationInMS);
+        intent.putExtra(RecorderActivityController.JOB_NAME_STRING_EXTRA_KEY, jobName);
+        startActivityForResult(intent, RecorderActivityController.REQUEST_CODE_RECORDER_VIEW);
     }
 
     @Override
@@ -62,10 +63,11 @@ public class RootActivity extends Activity implements RecorderController {
             case REQUEST_CODE_RECORDER_VIEW:
                 if (resultCode == RESULT_OK) {
                     // This means our Activity returned successfully. For now, Toast this text.
-                    String displayedMessage = data.getStringExtra("PATH");
-                    Toast.makeText(this, "Result OK! Displayed message: " + displayedMessage, Toast.LENGTH_SHORT).show();
+                    String displayedMessage = data.getStringExtra(RecorderActivityController.RECORDING_PATH_STRING_EXTRA_KEY);
+                    Toast.makeText(this, "Result OK! Path of recording: " + displayedMessage, Toast.LENGTH_SHORT).show();
                 } else if (resultCode == RESULT_CANCELED) {
                     //Write your code if there's no result
+                    Toast.makeText(this, "Recording cancelled.", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
