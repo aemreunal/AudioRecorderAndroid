@@ -99,9 +99,7 @@ public class RecorderActivity extends Activity implements RecorderController {
     public void switchToReadyToRecordState() {
         recorder.stopRecording();
         recordButton.setText(R.string.startRecording);
-        timeLeftCounter.setText(String.valueOf(((int) recordingDurationInMS) / 1000));
-        timeLeftCounter.invalidate();
-        progressWheel.setProgress(0);
+        setTimeDisplay(String.valueOf(((int) recordingDurationInMS) / 1000), 360);
     }
 
     @Override
@@ -116,6 +114,7 @@ public class RecorderActivity extends Activity implements RecorderController {
         submitButton.setEnabled(true);
         timeLeftCounter.setText("0");
         recordButton.setText(R.string.startListening);
+        setTimeDisplay("0", 360);
     }
 
     @Override
@@ -129,15 +128,21 @@ public class RecorderActivity extends Activity implements RecorderController {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                int remainingTimeAsCounter = (((int) remainingTime) / 1000) + 1;
-                timeLeftCounter.setText(String.valueOf(remainingTimeAsCounter));
-                double progress = (recordingDurationInMS - remainingTime) / (double) recordingDurationInMS;
-                progress *= 360.0;
-                progressWheel.setProgress((int) progress);
-                System.out.println("Progress: " + progress);
-                progressWheel.invalidate();
+                if(recorder.isRecording()) {
+                    int remainingTimeAsCounter = (((int) remainingTime) / 1000) + 1;
+                    double progress = (recordingDurationInMS - remainingTime) / (double) recordingDurationInMS;
+                    progress *= 360.0;
+                    setTimeDisplay(String.valueOf(remainingTimeAsCounter), (int) progress);
+                }
             }
         });
+    }
+
+    private void setTimeDisplay(String timeLeft, int progress) {
+        timeLeftCounter.setText(timeLeft);
+        timeLeftCounter.invalidate();
+        progressWheel.setProgress(progress);
+        progressWheel.invalidate();
     }
 
     @Override

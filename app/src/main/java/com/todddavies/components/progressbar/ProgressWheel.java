@@ -249,42 +249,33 @@ public class ProgressWheel extends View {
      *         the attributes to parse
      */
     private void parseAttributes(TypedArray a) {
-        barWidth = (int) a.getDimension(R.styleable.ProgressWheel_barWidth,
-                barWidth);
+        barWidth = (int) a.getDimension(R.styleable.ProgressWheel_barWidth, barWidth);
 
-        rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_rimWidth,
-                rimWidth);
+        rimWidth = (int) a.getDimension(R.styleable.ProgressWheel_rimWidth, rimWidth);
 
-        spinSpeed = (int) a.getDimension(R.styleable.ProgressWheel_spinSpeed,
-                spinSpeed);
+        spinSpeed = (int) a.getDimension(R.styleable.ProgressWheel_spinSpeed, spinSpeed);
 
-        delayMillis = a.getInteger(R.styleable.ProgressWheel_delayMillis,
-                delayMillis);
+        delayMillis = a.getInteger(R.styleable.ProgressWheel_delayMillis, delayMillis);
         if (delayMillis < 0) {
             delayMillis = 0;
         }
 
         barColor = a.getColor(R.styleable.ProgressWheel_barColor, barColor);
 
-        barLength = (int) a.getDimension(R.styleable.ProgressWheel_barLength,
-                barLength);
+        barLength = (int) a.getDimension(R.styleable.ProgressWheel_barLength, barLength);
 
-        textSize = (int) a.getDimension(R.styleable.ProgressWheel_textSize,
-                textSize);
+        textSize = (int) a.getDimension(R.styleable.ProgressWheel_textSize, textSize);
 
-        textColor = (int) a.getColor(R.styleable.ProgressWheel_textColor,
-                textColor);
+        textColor = (int) a.getColor(R.styleable.ProgressWheel_textColor, textColor);
 
         //if the text is empty , so ignore it
         if (a.hasValue(R.styleable.ProgressWheel_text)) {
             setText(a.getString(R.styleable.ProgressWheel_text));
         }
 
-        rimColor = (int) a.getColor(R.styleable.ProgressWheel_rimColor,
-                rimColor);
+        rimColor = (int) a.getColor(R.styleable.ProgressWheel_rimColor, rimColor);
 
-        circleColor = (int) a.getColor(R.styleable.ProgressWheel_circleColor,
-                circleColor);
+        circleColor = (int) a.getColor(R.styleable.ProgressWheel_circleColor, circleColor);
 
         contourColor = a.getColor(R.styleable.ProgressWheel_contourColor, contourColor);
         contourSize = a.getDimension(R.styleable.ProgressWheel_contourSize, contourSize);
@@ -311,7 +302,7 @@ public class ProgressWheel extends View {
             canvas.drawArc(circleBounds, progress - 90, barLength, false,
                     barPaint);
         } else {
-            canvas.drawArc(circleBounds, -90, progress, false, barPaint);
+            canvas.drawArc(circleBounds, -90, progress - 360, false, barPaint);
         }
         //Draw the text (attempts to center it horizontally and vertically)
         float textHeight = textPaint.descent() - textPaint.ascent();
