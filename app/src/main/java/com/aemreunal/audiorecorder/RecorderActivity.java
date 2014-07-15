@@ -84,6 +84,7 @@ public class RecorderActivity extends Activity implements RecorderController {
             } else {
                 switchToReadyToRecordState();
             }
+
         } else {
             if (!recorder.isPlaying()) {
                 switchToListeningState();
@@ -98,7 +99,7 @@ public class RecorderActivity extends Activity implements RecorderController {
         recorder.stopRecording();
         recordButton.setText(R.string.startRecording);
         timeLeftCounter.setText(String.valueOf(((int) recordingDurationInMS) / 1000));
-
+        timeLeftCounter.invalidate();
 //        progressBar.setMax((int) recordingDurationInMS);
 //        progressBar.setProgress(0);
     }

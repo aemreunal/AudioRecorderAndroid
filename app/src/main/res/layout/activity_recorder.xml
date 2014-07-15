@@ -11,10 +11,14 @@
     <Button
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_centerHorizontal="true"
             android:id="@+id/recordButton"
             android:text="@string/startRecording"
-            android:onClick="recordButtonTapped"/>
+            android:textColor="#ffffffff"
+            android:onClick="recordButtonTapped"
+            android:background="@drawable/record_button"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"/>
 
     <TextView
             android:layout_width="wrap_content"
@@ -22,7 +26,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/timeLeftLabel"
             android:id="@+id/timeLeftLabel"
-            android:layout_centerVertical="true"
+            android:layout_marginTop="52dp"
+            android:layout_below="@+id/recordButton"
             android:layout_centerHorizontal="true"/>
 
     <TextView
