@@ -21,7 +21,8 @@ public class Recorder {
     public static final int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
     public static final int AUDIO_ENCODING_BIT_RATE = 128000;
     public static final int AUDIO_SAMPLING_RATE = 44100;
-    public static final int TIMER_UPDATE_FREQUENCY_MS = 100;
+    public static final int FPS = 60;
+    public static final int TIMER_UPDATE_FREQUENCY_MS = 1000 / FPS;
 
     private String name;
     private long durationInMS;

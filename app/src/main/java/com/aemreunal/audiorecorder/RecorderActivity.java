@@ -14,11 +14,12 @@ import android.widget.TextView;
 import com.aemreunal.audiorecorder.model.Recorder;
 import com.aemreunal.audiorecorder.model.RecorderActivityController;
 import com.aemreunal.audiorecorder.model.RecorderController;
+import com.todddavies.components.progressbar.ProgressWheel;
 
 public class RecorderActivity extends Activity implements RecorderController {
     private Button recordButton;
     private MenuItem submitButton;
-    //    private ProgressBar progressBar;
+    private ProgressWheel progressWheel;
     private TextView timeLeftCounter;
 
     private Recorder recorder;
@@ -43,7 +44,7 @@ public class RecorderActivity extends Activity implements RecorderController {
     private void getActivityElements() {
         recordButton = (Button) findViewById(R.id.recordButton);
         timeLeftCounter = (TextView) findViewById(R.id.timeLeftCounter);
-//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressWheel = (ProgressWheel) findViewById(R.id.pw_spinner);
     }
 
     private void setActionBarProperties() {
@@ -100,8 +101,7 @@ public class RecorderActivity extends Activity implements RecorderController {
         recordButton.setText(R.string.startRecording);
         timeLeftCounter.setText(String.valueOf(((int) recordingDurationInMS) / 1000));
         timeLeftCounter.invalidate();
-//        progressBar.setMax((int) recordingDurationInMS);
-//        progressBar.setProgress(0);
+        progressWheel.setProgress(0);
     }
 
     @Override
@@ -131,7 +131,11 @@ public class RecorderActivity extends Activity implements RecorderController {
             public void run() {
                 int remainingTimeAsCounter = (((int) remainingTime) / 1000) + 1;
                 timeLeftCounter.setText(String.valueOf(remainingTimeAsCounter));
-//                progressBar.setProgress((int) ((recordingDurationInMS - remainingTime) / recordingDurationInMS));
+                double progress = (recordingDurationInMS - remainingTime) / (double) recordingDurationInMS;
+                progress *= 360.0;
+                progressWheel.setProgress((int) progress);
+                System.out.println("Progress: " + progress);
+                progressWheel.invalidate();
             }
         });
     }
